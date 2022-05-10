@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- FontAwesome -->
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.css' integrity='sha512-1hsteeq9xTM5CX6NsXiJu3Y/g+tj+IIwtZMtTisemEv3hx+S9ngaW4nryrNcPM4xGzINcKbwUJtojslX2KG+DQ==' crossorigin='anonymous'/>
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Dayjs -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.2/dayjs.min.js"></script>
+  <!-- VueJs -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <!-- Css -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <title>Document</title>
+</head>
+<body>
+<!-- Corpo Principale del Layout -->
+<div id="app" class="main-container">
+  <!-- Colonna sinistra coprpo principale -->
+  <div class="main-col-sx float-left clearfix">
+    <!-- Header colonna sinistra -->
+    <div class="main-col-sx-header">
+      <!-- User Data container -->
+      <div class="user-data-container">
+        <div class="user-image"><img :src="`assets/img/avatar${mainUser.avatar}.jpg`" :alt="mainUser.avatar"></div>
+        <div class="user-name"> {{users[0].name}}</div>
+      </div>
+      <!-- Icone Opzioni -->
+      <div class="option-icon-container">
+        <ul>
+          <li><i class="fa-solid fa-circle-notch"></i></li>
+          <li><i class="fa-solid fa-message"></i></li>
+          <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Barra notiche on/off -->
+    <div class="notif-bar">
+      <div class=" notif-bell">
+        <i class="fa-solid fa-bell-slash"></i>
+      </div>
+      <div class="text-notif-container">
+        <p class="">ricevi notifiche di nuovi messaggi</p>
+        <span class="">attiva notifiche desktop</span>
+      </div>
+    </div>
+    <!-- Barra ricerca nome -->
+    <div class="search-bar-container">
+      <!-- Barra ricerca + button -->
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input v-model.trim="filterName" type="textarea" placeholder="Search here...">
+    </div>
+    <!-- Contenitore chat -->
+    <div  class="chat-container">
+      <div @click="selectChat(index)" 
+      v-for="(user, index) in users" 
+      :class="chatSelectorIndex == index ? 'active-user' : ''"
+      v-if="user.visible = true"
+      class="chat-card clearfix">
+        <!-- immagine user -->
+        <div class="user-image float-left">
+          <img :src="`assets/img/avatar${user.avatar}.jpg`" :alt="user.avatar">
+        </div>
+        <!-- dati User -->
+        <div class="text-chat float-left">
+          <p class="user-name">{{user.name}}</p>
+          <p  class="date">{{user.messages[user.messages.length - 1].date}}</p>
+        </div>
+        <span class="chat-preview">{{user.messages[user.messages.length -1].message}}</span>
+      </div>
+    </div>
+  </div>
+  <!-- Colonna destra corpo principale -->
+  <div class="main-col-dx float-left clearfix">
+    <!-- header destro -->
+    <div class="main-col-dx-header">
+      <div class="user-data-container">
+        <div class="user-image"><img :src="`assets/img/avatar${users[chatSelectorIndex].avatar}.jpg`" :alt="users[chatSelectorIndex].name"></div>
+        <div class="text-notif-container">
+          <p class="user-name">{{users[chatSelectorIndex].name}}</p>
+          <span id="col-dx-header-span">Ultimo accesso alle
+            {{lastDateFunction(chatSelectorIndex)}} </span>
+        </div>
+      </div>
+      <div class="option-icon-container">
+        <ul>
+          <li><i class="fa-solid fa-magnifying-glass"></i></li>
+          <li><i class="fa-solid fa-paperclip"></i></li>
+          <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Corpo principale chat -->
+    <div class="main-col-dx-main">
+      <div class="messages-container">
+        <div
+          v-for="(message, index) in users[chatSelectorIndex].messages"
+          :class="message.status == 'received' ? 'received' : 'sent' "
+          class="message">
+          <div class="text-fav-icon">
+            <p>{{message.message}}</p>
+            <i @click="" class="fa-solid fa-chevron-down"></i>
+          </div>
+          <p class="date date-in-message">{{message.date}}</p>
+        </div>
+
+      </div>
+    </div>
+    <!-- Footer input di chat -->
+    <div class="main-col-dx-footer">
+      <i class="fa-solid fa-face-smile"></i>
+      <input @keyup.13="newMessageFunction(chatSelectorIndex), setTimeOutFuncion()" v-model="newMessageToPush" type="text" placeholder=" Scrivi Qui...">
+      <i class="fa-solid fa-microphone"></i>
+    </div>
+  </div>
+
+</div>
+  <script src="./assets/js/script.js"></script>
+</body>
+</html>
